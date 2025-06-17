@@ -1,25 +1,48 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:template_flutter_bloc/presentations/authentication/data/model/user_model.dart';
+import 'package:template_flutter_bloc/utils/try_catch.dart';
 
 class AuthProvider {
-  Future<Map<String, dynamic>?> signIn({
-    required String email,
-    required String password,
-  }) async {
+  final CollectionReference _usersCollection = FirebaseFirestore.instance
+      .collection('users');
 
-    return null;
+  String? get userId => FirebaseAuth.instance.currentUser?.uid;
+
+  bool get isVerified =>
+      FirebaseAuth.instance.currentUser?.emailVerified == true;
+
+  Future<bool?> signUp(UserModel user, String password) async {
+    return await appTryCatch(() async {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: user.email,
+            password: password,
+          );
+
+      if (userCredential.user != null) {
+        user = user.copyWith(id: userCredential.user!.uid);
+        await _usersCollection.doc(userCredential.user!.uid).set(user);
+        return true;
+      }
+      return false;
+    });
   }
 
-  Future<Map<String, dynamic>?> signUp({
-    required Map<String, dynamic> user,
-    required String password,
-    required String confirmPassword,
-  }) async {
-
-
-    return null;
+  Future<UserModel?> getMe() {
+    return appTryCatch(() async {
+      DocumentSnapshot userDoc = await _usersCollection.doc(userId).get();
+      return UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
+    });
   }
 
-  Future<Map<String, dynamic>?> getMe() async{
-
-    return null;
+  Future<bool?> login(email, password) async {
+    return await appTryCatch(() async {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return true;
+    });
   }
 }
