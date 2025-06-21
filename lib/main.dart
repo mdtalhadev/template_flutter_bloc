@@ -10,10 +10,16 @@ import 'firebase_options.dart';
 import 'presentations/authentication/ui/sign_in_screen.dart';
 
 void main() async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   initServices();
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          create: (context) => AuthenticationBloc()..add(AuthenticationStarted()),
+        ),
+      ],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
