@@ -12,10 +12,10 @@ part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final AuthProvider _authProvider;
+  final AuthenticationProvider _authenticationProvider;
 
   AuthenticationBloc()
-    : _authProvider = locator.get<AuthProvider>(),
+    : _authenticationProvider = locator.get<AuthenticationProvider>(),
       super(AuthenticationInitial()) {
     on<AuthenticationStarted>(_authenticationStarted);
     on<LoginUser>(_loginUser);
@@ -28,7 +28,7 @@ class AuthenticationBloc
   ) async {
     try {
       emit(AuthenticationLoading());
-      String? userId = _authProvider.userId;
+      String? userId = _authenticationProvider.userId;
       if (userId != null) {
         _handleAUth(emit);
       } else {
@@ -47,7 +47,7 @@ class AuthenticationBloc
   ) async {
     try {
       emit(LoggInLoading());
-      bool? isLoggIn = await _authProvider.login(event.email, event.password);
+      bool? isLoggIn = await _authenticationProvider.login(event.email, event.password);
       if (isLoggIn == true) {
         await _handleAUth(emit);
       } else {
@@ -59,12 +59,12 @@ class AuthenticationBloc
   }
 
   Future<void> _handleAUth(Emitter<AuthenticationState> emit) async {
-    bool isVerified = _authProvider.isVerified;
+    bool isVerified = _authenticationProvider.isVerified;
     if (isVerified) {
-      UserModel? me = await _authProvider.getMe();
+      UserModel? me = await _authenticationProvider.getMe();
       if (me != null) {
         emit(
-          AuthenticationSuccess("Welcome ${me.firstName} ${me.lastName}", me),
+          AuthenticationSuccess("Welcome ${me.name}", me),
         );
       } else {
         emit(AuthenticationFailure());
@@ -80,7 +80,7 @@ class AuthenticationBloc
   ) async {
     try {
       emit(SignUpLoading());
-      bool? isSignup = await _authProvider.signUp(event.user, event.password);
+      bool? isSignup = await _authenticationProvider.signUp(event.user, event.password);
       if (isSignup == true) {
         await _handleAUth(emit);
       } else {

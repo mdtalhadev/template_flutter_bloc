@@ -9,13 +9,13 @@ class AppGenerateRoute {
 
   static Route<dynamic>? generateRoute(RouteSettings setting) {
     switch (setting.name) {
-      case RouteName.splash:
+      case SplashScreen.routeName:
         return _navigateScreen(const SplashScreen());
-      case RouteName.signIn:
+      case SignInScreen.routeName:
         return _navigateScreen(const SignInScreen());
-      case RouteName.signUp:
+      case SignUpScreen.routeName:
         return _navigateScreen(const SignUpScreen());
-      case RouteName.homeScreen:
+      case MyHomePage.routeName:
         return _navigateScreen(const MyHomePage());
       default:
         return _navigateScreen(
@@ -53,11 +53,3 @@ class AppGenerateRoute {
   }
 }
 
-class RouteName {
-  RouteName._();
-
-  static const splash = "/splash";
-  static const signIn = "/signIn";
-  static const signUp = "/signUp";
-  static const homeScreen = "/homeScreen";
-}

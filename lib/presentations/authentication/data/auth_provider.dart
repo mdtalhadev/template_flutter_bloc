@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:template_flutter_bloc/presentations/authentication/data/model/user_model.dart';
 import 'package:template_flutter_bloc/utils/try_catch.dart';
 
-class AuthProvider {
+class AuthenticationProvider {
   final CollectionReference _usersCollection = FirebaseFirestore.instance
       .collection('users');
 
@@ -21,7 +21,7 @@ class AuthProvider {
           );
 
       if (userCredential.user != null) {
-        user = user.copyWith(id: userCredential.user!.uid);
+        user = user.copyWith(uid: userCredential.user!.uid);
         await _usersCollection.doc(userCredential.user!.uid).set(user);
         return true;
       }
@@ -32,7 +32,7 @@ class AuthProvider {
   Future<UserModel?> getMe() {
     return appTryCatch(() async {
       DocumentSnapshot userDoc = await _usersCollection.doc(userId).get();
-      return UserModel.fromJson(userDoc.data() as Map<String, dynamic>);
+      return UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
     });
   }
 

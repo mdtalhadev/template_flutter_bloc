@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:template_flutter_bloc/presentations/authentication/ui/widgets/link_to_signup_or_login.dart';
+import 'package:template_flutter_bloc/index.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
+
+  static const String routeName = '/signIn';
+  static const String routePath = '/signIn';
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +18,9 @@ class SignInScreen extends StatelessWidget {
             linkText: "Sign Up",
             onTap: () {
               // Navigate to Sign Up screen
-              Navigator.pushNamed(context, '/signUp');
+              Navigator.pushNamed(context, SignInScreen.routeName);
             },
-          )
+          ),
         ],
       ),
     );

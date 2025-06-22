@@ -8,7 +8,7 @@ final GetIt locator = GetIt.instance;
 void initServices() {
 
   /// locator.registerSingleton<AuthenticationProvider>(AuthenticationProvider());
-  locator.registerSingleton<AuthProvider>(AuthProvider());
+  locator.registerSingleton<AuthenticationProvider>(AuthenticationProvider());
 
 
 

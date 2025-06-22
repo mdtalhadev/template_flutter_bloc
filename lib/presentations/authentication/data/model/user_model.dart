@@ -1,60 +1,82 @@
-enum UserType { employee, manager }
+import 'package:equatable/equatable.dart';
 
-class UserModel {
-  final String? id;
+enum UserRole {
+  shopkeeper, // 0
+  factory, // 1
+  vehicle // 2
+}
+
+class UserModel extends Equatable {
+  final String uid;
+  final String name;
   final String email;
-  final String? firstName;
-  final String? lastName;
-  final UserType role;
+  final String? phone;
+  final UserRole role;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   UserModel({
-    this.id,
+    required this.uid,
+    required this.name,
     required this.email,
-    this.firstName,
-    this.lastName,
-    this.role = UserType.manager,
-  });
+    this.phone,
+    required this.role,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  })
+      : createdAt = createdAt ?? DateTime.now(),
+        updatedAt = updatedAt ?? DateTime.now();
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: json['id'],
-      email: json['email'] as String,
-      firstName: json['first_name'],
-      lastName: json['last_name'] as String?,
-      role: UserType.values.firstWhere((v) => v.name == json['role'], orElse: () => UserType.manager),
+        uid: map['uid'] as String,
+        name: map['name'] as String,
+        email: map['email'] as String,
+        phone: map['phone'] as String?,
+        role: UserRole.values[map['role'] as int],
+        createdAt : DateTime.fromMicrosecondsSinceEpoch(map['created_at'] as int),
+        updatedAt: DateTime.fromMicrosecondsSinceEpoch(map['updated_at'] as int)
     );
   }
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{
-      'id': id,
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'name': name,
       'email': email,
-      'first_name': firstName,
-      'last_name': lastName,
-      'role': role.name,
+      'phone': phone,
+      'role': role.index,
+      'created_at': createdAt.millisecondsSinceEpoch,
+      'updated_at': updatedAt.millisecondsSinceEpoch,
     };
-    map.removeWhere((key, value) => value == null);
-    return map;
   }
 
   UserModel copyWith({
-    String? id,
+    String? uid,
+    String? name,
     String? email,
-    String? firstName,
-    String? lastName,
-    UserType? role,
+    String? phone,
+    UserRole? role,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return UserModel(
-      id: id ?? this.id,
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
       email: email ?? this.email,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
+      phone: phone ?? this.phone,
       role: role ?? this.role,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   @override
+  List<Object?> get props => [uid, name, email, phone, role, createdAt];
+
+  @override
   String toString() {
-    return 'UserModel{id: $id, email: $email, firstName: $firstName, lastName: $lastName, role: $role}';
+    return 'UserModel(uid: $uid, name: $name, email: $email, phone: $phone, role: ${role
+        .name}, createdAt: $createdAt)';
   }
 }

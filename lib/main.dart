@@ -48,6 +48,9 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
+  static const String routeName = '/home';
+  static const String routePath = '/home';
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
