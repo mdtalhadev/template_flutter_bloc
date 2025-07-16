@@ -2,10 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:template_flutter_bloc/config/di/locator.dart';
+import 'package:template_flutter_bloc/config/router/app_routes.dart';
 import 'package:template_flutter_bloc/config/theme/theme.dart';
 import 'package:template_flutter_bloc/presentations/authentication/bloc/authentication_bloc.dart';
+import 'package:template_flutter_bloc/presentations/home/app_main.dart';
 import 'package:template_flutter_bloc/presentations/splash_screen.dart';
 
+import 'config/router/app_navigator_key.dart';
 import 'firebase_options.dart';
 import 'presentations/authentication/ui/sign_in_screen.dart';
 
@@ -13,13 +16,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   initServices();
-  runApp(MultiBlocProvider(
+  runApp(
+    MultiBlocProvider(
       providers: [
         BlocProvider<AuthenticationBloc>(
-          create: (context) => AuthenticationBloc()..add(AuthenticationStarted()),
+          create: (context) =>
+              AuthenticationBloc()..add(AuthenticationStarted()),
         ),
       ],
-      child: const MyApp()));
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -28,12 +35,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Template Flutter Bloc',
+      title: 'My Habit',
       theme: AppTheme.lightTheme,
+      onGenerateRoute: AppGenerateRoute.generateRoute,
+      navigatorKey: appNavigatorKey,
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is AuthenticationSuccess) {
-            return const MyHomePage();
+            return const AppMainScreen();
           }
           if (state is AuthenticationFailure) {
             return const SignInScreen();
@@ -41,50 +50,6 @@ class MyApp extends StatelessWidget {
           return SplashScreen();
         },
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  static const String routeName = '/home';
-  static const String routePath = '/home';
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Template Flutter Bloc")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:template_flutter_bloc/index.dart';
+import 'package:template_flutter_bloc/presentations/authentication/ui/sign_up_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -11,14 +12,15 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Logg in Screen"),
+          Text("Implement Logg in Screen"),
           LinkToSignUpOrLogin(
             text: "Don't have an account? ",
             linkText: "Sign Up",
             onTap: () {
               // Navigate to Sign Up screen
-              Navigator.pushNamed(context, SignInScreen.routeName);
+              Navigator.pushNamed(context, SignUpScreen.routeName);
             },
           ),
         ],

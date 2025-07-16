@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:template_flutter_bloc/main.dart';
 import 'package:template_flutter_bloc/presentations/authentication/ui/sign_in_screen.dart';
 import 'package:template_flutter_bloc/presentations/authentication/ui/sign_up_screen.dart';
+import 'package:template_flutter_bloc/presentations/home/app_main.dart';
 import 'package:template_flutter_bloc/presentations/splash_screen.dart';
 
 class AppGenerateRoute {
@@ -15,8 +16,8 @@ class AppGenerateRoute {
         return _navigateScreen(const SignInScreen());
       case SignUpScreen.routeName:
         return _navigateScreen(const SignUpScreen());
-      case MyHomePage.routeName:
-        return _navigateScreen(const MyHomePage());
+      case AppMainScreen.routeName:
+        return _navigateScreen(const AppMainScreen());
       default:
         return _navigateScreen(
           Scaffold(
